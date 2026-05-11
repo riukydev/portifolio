@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <title>Riuky.dev - Software Engineer</title>
+    
+    <!-- Tailwind CSS with config -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        darkbg: '#030305',
+                        darkcard: '#0a0a0c',
+                    },
+                    animation: {
+                        'gradient-x': 'gradient-x 8s ease infinite',
+                        'float': 'float 6s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        'gradient-x': {
+                            '0%, 100%': {
+                                'background-size': '200% 200%',
+                                'background-position': 'left center'
+                            },
+                            '50%': {
+                                'background-size': '200% 200%',
+                                'background-position': 'right center'
+                            },
+                        },
+                        'float': {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-10px)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Google Fonts: Inter & Plus Jakarta Sans -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-main: #f8fafc;
+            --text-main: #0f172a;
+            --accent-glow: rgba(59, 130, 246, 0.08);
+            --cursor-glow: rgba(0, 0, 0, 0.4);
+        }
+
+        .dark {
+            --bg-main: #030305;
+            --text-main: #e5e5e5;
+            --accent-glow: rgba(59, 130, 246, 0.12);
+            --cursor-glow: rgba(255, 255, 255, 0.5);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            transition: background-color 0.5s ease, color 0.5s ease;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+            cursor: none; 
+        }
+
+        h1, h2, h3, .font-heading {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        /* --- Cursor 3D Premium Aprimorado --- */
+        #custom-cursor {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 44px;
+            height: 44px;
+            pointer-events: none;
+            z-index: 10000;
+            will-change: transform;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .cursor-wrapper {
+            width: 100%;
+            height: 100%;
+            transition: transform 0.15s ease-out;
+            will-change: transform;
+        }
+
+        .cursor-image {
+            width: 100%;
+            height: 100%;
+            background-image: url('https://static.vecteezy.com/system/resources/previews/025/208/786/non_2x/cursor-3d-element-free-png.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            filter: drop-shadow(0 6px 12px var(--cursor-glow)) brightness(0.9);
+            transition: filter 0.4s ease, transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transform-origin: center;
+        }
+
+        .dark .cursor-image {
+            filter: drop-shadow(0 0 12px var(--cursor-glow)) brightness(1.2) contrast(1.1);
+        }
+
+        /* Hover em elementos interativos */
+        body.cursor-hover .cursor-image {
+            transform: scale(1.3) rotate(-8deg);
+        }
+        body.cursor-hover:not(.dark) .cursor-image {
+            filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.5)) brightness(0.8);
+        }
+        .dark body.cursor-hover .cursor-image {
+            filter: drop-shadow(0 0 20px rgba(59, 130, 246, 0.9)) brightness(1.4);
+        }
+
+        /* Efeito de Clique Dinâmico (Ondas) */
+        .ripple {
+            position: fixed;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%, -50%);
+            border: 2px solid rgba(15, 23, 42, 0.3);
+            background: rgba(15, 23, 42, 0.05);
+            animation: ripple-effect 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        .dark .ripple {
+            border: 2px solid rgba(59, 130, 246, 0.6);
+            background: rgba(59, 130, 246, 0.1);
+        }
+
+        @keyframes ripple-effect {
+            0% { width: 0; height: 0; opacity: 1; border-width: 4px; }
+            100% { width: 140px; height: 140px; opacity: 0; border-width: 1px; }
+        }
+
+        @media (hover: none) {
+            body { cursor: auto; }
+            #custom-cursor { display: none !important; }
+        }
+
+        /* --- Scrollbar --- */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: var(--bg-main); }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        .dark ::-webkit-scrollbar-thumb { background: #334155; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        .dark ::-webkit-scrollbar-thumb:hover { background: #475569; }
+
+        /* --- Cinematic Reveal Animation --- */
+        .reveal { 
+            opacity: 0; 
+            transform: translateY(30px) scale(0.98); 
+            filter: blur(8px);
+            transition: all 1s cubic-bezier(0.16, 1, 0.3, 1); 
+        }
+        .reveal.active { 
+            opacity: 1; 
+            transform: translateY(0) scale(1); 
+            filter: blur(0);
+        }
+
+        /* --- Premium Glass Cards Adaptáveis --- */
+        .glass-card {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+        .glass-card:hover {
+            box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.1);
+            border-color: #cbd5e1;
+            transform: translateY(-8px);
+        }
+        
+        .dark .glass-card {
+            background: rgba(255, 255, 255, 0.015);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.01);
+        }
+        .dark .glass-card:hover { 
+            background: rgba(255, 255, 255, 0.03);
+            border-color: rgba(255, 255, 255, 0.1); 
+            border-top-color: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 20px 40px -10px rgba(0,0,0,0.6), inset 0 0 20px rgba(255, 255, 255, 0.02);
+        }
+
+        /* --- Gradient Text --- */
+        .text-gradient {
+            background: linear-gradient(135deg, #2563eb 0%, #4f46e5 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-size: 200% auto;
+        }
+        .dark .text-gradient {
+            background: linear-gradient(to right, #ffffff, #94a3b8, #ffffff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-size: 200% auto;
+        }
+
+        /* --- Background Animation --- */
+        .ambient-glow {
+            position: fixed;
+            width: 100vw;
+            height: 100vh;
+            top: 0; left: 0;
+            z-index: -1; 
+            pointer-events: none;
+            overflow: hidden;
+        }
+        .ambient-glow::before, .ambient-glow::after {
+            content: '';
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(100px);
+            opacity: 0.6;
+            animation: float 10s infinite ease-in-out alternate;
+        }
+        .ambient-glow::before {
+            width: 600px; height: 600px;
+            background: radial-gradient(circle, rgba(59,130,246,0.15) 0%, transparent 70%);
+            top: -10%; left: -10%;
+        }
+        .ambient-glow::after {
+            width: 500px; height: 500px;
+            background: radial-gradient(circle, rgba(139,92,246,0.1) 0%, transparent 70%);
+            bottom: -10%; right: -10%;
+            animation-delay: -5s;
+        }
+
+        a, button, .glass-card { touch-action: manipulation; }
+        .delay-100 { transition-delay: 100ms; }
+        .delay-200 { transition-delay: 200ms; }
+        .delay-300 { transition-delay: 300ms; }
+    </style>
+</head>
+<body class="selection:bg-blue-500/20 selection:text-slate-900 dark:selection:text-white">
+
+    <!-- Cursor Element -->
+    <div id="custom-cursor">
+        <div class="cursor-wrapper">
+            <div class="cursor-image"></div>
+        </div>
+    </div>
+
+    <div class="ambient-glow"></div>
+
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="fixed inset-0 z-50 bg-white/98 dark:bg-[#030305]/98 backdrop-blur-2xl hidden flex-col transition-all duration-300 opacity-0">
+        <div class="flex justify-end p-6">
+            <button onclick="toggleMenu()" class="text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white p-2 transition-transform hover:rotate-90"><i data-lucide="x" class="w-8 h-8"></i></button>
+        </div>
+        <div class="flex flex-col items-center justify-center flex-1 gap-10 text-2xl font-heading font-medium tracking-wide">
+            <a href="#about" onclick="toggleMenu()" class="text-slate-700 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Sobre</a>
+            <a href="#stack" onclick="toggleMenu()" class="text-slate-700 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Stack</a>
+            <a href="#projects" onclick="toggleMenu()" class="text-slate-700 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Projetos</a>
+            <a href="#contact" onclick="toggleMenu()" class="text-slate-700 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Contato</a>
+        </div>
+    </div>
+
+    <!-- Navbar -->
+    <nav class="fixed w-full z-40 top-0 bg-white/80 dark:bg-[#030305]/70 backdrop-blur-xl border-b border-slate-200 dark:border-white/5 transition-all h-20">
+        <div class="container mx-auto px-6 h-full flex items-center justify-between">
+            <a href="#" class="text-xl font-heading font-bold flex items-center gap-3 group text-slate-900 dark:text-white">
+                <div class="relative w-10 h-10 flex items-center justify-center group-hover:scale-110 transition-transform duration-500">
+                    <!-- Logo do Usuário -->
+                    <img 
+                        src="blob:https://www.image2url.com/82dd652d-ce5a-42b5-93bf-a3247d246a17" 
+                        alt="Riuky Logo" 
+                        class="w-full h-full object-contain filter drop-shadow-[0_0_8px_rgba(59,130,246,0.3)]"
+                        onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+                    >
+                    <!-- Fallback se a logo falhar -->
+                    <div style="display:none" class="w-9 h-9 rounded-xl bg-gradient-to-tr from-slate-800 to-slate-600 dark:from-white dark:to-gray-300 flex items-center justify-center text-white dark:text-black text-sm shadow-[0_0_15px_rgba(0,0,0,0.1)] dark:shadow-[0_0_15px_rgba(255,255,255,0.2)]">
+                        R
+                    </div>
+                </div>
+                <span class="tracking-tight">Riuky.dev</span>
+            </a>
+
+            <div class="hidden md:flex items-center gap-10 text-sm font-medium text-slate-600 dark:text-gray-400">
+                <a href="#about" class="hover:text-blue-600 dark:hover:text-white transition-colors">Sobre</a>
+                <a href="#stack" class="hover:text-blue-600 dark:hover:text-white transition-colors">Stack</a>
+                <a href="#projects" class="hover:text-blue-600 dark:hover:text-white transition-colors">Projetos</a>
+                <a href="#contact" class="hover:text-blue-600 dark:hover:text-white transition-colors">Contato</a>
+            </div>
+
+            <div class="flex items-center gap-5">
+                <button onclick="toggleTheme()" class="text-slate-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-white transition-colors"><i id="theme-icon" data-lucide="sun" class="w-5 h-5"></i></button>
+                <div class="w-px h-4 bg-slate-200 dark:bg-white/10 hidden md:block"></div>
+                <a href="https://github.com/riukydev" target="_blank" class="text-slate-500 dark:text-gray-400 hover:text-slate-900 dark:hover:text-white transition-colors"><i data-lucide="github" class="w-5 h-5"></i></a>
+                <a href="#contact" class="hidden md:block px-6 py-2.5 bg-slate-900 dark:bg-white text-white dark:text-black text-sm font-bold rounded-full hover:bg-slate-800 dark:hover:bg-gray-200 transition-transform hover:scale-105 shadow-md dark:shadow-[0_0_20px_rgba(255,255,255,0.1)]">Conversar</a>
+                <button onclick="toggleMenu()" class="md:hidden text-slate-500 dark:text-gray-400"><i data-lucide="menu" class="w-7 h-7"></i></button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <section id="about" class="pt-48 pb-32 px-6 text-center relative">
+        <div class="container mx-auto max-w-5xl reveal">
+            <span class="px-5 py-2 rounded-full bg-blue-50 dark:bg-blue-500/10 border border-blue-200 dark:border-blue-500/20 text-xs font-bold text-blue-700 dark:text-blue-300 mb-8 inline-flex items-center gap-3 backdrop-blur-md">
+                <span class="relative flex h-2.5 w-2.5">
+                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
+                  <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-blue-500"></span>
+                </span>
+                Disponível para novos desafios
+            </span>
+            <h1 class="text-5xl md:text-7xl lg:text-8xl font-heading font-extrabold mb-8 leading-[1.1] tracking-tighter text-slate-900 dark:text-white">
+                Software Engineer<br>
+                <span class="text-gradient animate-gradient-x inline-block mt-2">Front-End Specialist.</span>
+            </h1>
+            <p class="text-slate-600 dark:text-gray-400 text-lg md:text-xl max-w-2xl mx-auto mb-12 leading-relaxed font-light">
+                Construindo experiências digitais imersivas e de alta performance. Combino design de ponta com engenharia de software escalável.
+            </p>
+            <div class="flex flex-col sm:flex-row justify-center gap-5">
+                <a href="#projects" class="px-8 py-4 bg-slate-900 dark:bg-white text-white dark:text-black font-bold rounded-xl hover:scale-105 transition-transform shadow-lg dark:shadow-[0_0_30px_rgba(255,255,255,0.15)]">Ver Projetos Selecionados</a>
+                <a href="https://github.com/riukydev" target="_blank" class="px-8 py-4 bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 text-slate-700 dark:text-white font-medium rounded-xl hover:bg-slate-50 dark:hover:bg-white/10 transition-all w-full sm:w-auto flex items-center justify-center gap-2 backdrop-blur-sm">
+                    <i data-lucide="github" class="w-5 h-5"></i> Explorar Código
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stack Section -->
+    <section id="stack" class="py-24 border-t border-slate-200 dark:border-white/5 bg-slate-50 dark:bg-[#050508] relative">
+        <div class="container mx-auto px-6 max-w-6xl">
+            <div class="mb-20 text-center reveal">
+                <h2 class="text-3xl md:text-5xl font-heading font-bold text-slate-900 dark:text-white mb-5 tracking-tight">Stack Tecnológica</h2>
+                <p class="text-slate-600 dark:text-gray-400 text-lg max-w-2xl mx-auto">Ferramentas de ponta para criar aplicações robustas, rápidas e esteticamente perfeitas.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Frontend -->
+                <div class="reveal">
+                    <div class="flex items-center gap-4 mb-8">
+                        <div class="p-3 rounded-xl bg-blue-100 dark:bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-200 dark:border-blue-500/20 shadow-sm dark:shadow-[0_0_15px_rgba(59,130,246,0.15)]"><i data-lucide="layout" class="w-6 h-6"></i></div>
+                        <h3 class="font-heading font-bold text-slate-900 dark:text-white text-2xl">Front-End</h3>
+                    </div>
+                    <div class="space-y-4">
+                        <div class="glass-card p-5 rounded-2xl flex items-center gap-5 group cursor-none">
+                            <div class="w-12 h-12 flex items-center justify-center bg-slate-50 dark:bg-white/5 rounded-xl group-hover:bg-blue-50 dark:group-hover:bg-blue-500/20 group-hover:scale-110 transition-all border border-slate-100 dark:border-white/5 group-hover:border-blue-200 dark:group-hover:border-blue-500/30">
+                                <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg" class="w-7 h-7 animate-float" alt="React">
+                            </div>
+                            <div>
+                                <div class="text-base font-bold text-slate-900 dark:text-gray-200">React.js</div>
+                                <div class="text-sm text-slate-500 dark:text-gray-500">Hooks, Context API, Redux</div>
+                            </div>
+                        </div>
+                        <div class="glass-card p-5 rounded-2xl flex items-center gap-5 group cursor-none">
+                            <div class="w-12 h-12 flex items-center justify-center bg-slate-50 dark:bg-white/5 rounded-xl group-hover:bg-slate-100 dark:group-hover:bg-white/20 group-hover:scale-110 transition-all border border-slate-100 dark:border-white/5 group-hover:border-slate-300 dark:group-hover:border-white/30">
+                                <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nextjs/nextjs-original.svg" class="w-7 h-7 dark:invert opacity-80 group-hover:opacity-100 transition-opacity" alt="Next">
+                            </div>
+                            <div>
+                                <div class="text-base font-bold text-slate-900 dark:text-gray-200">Next.js</div>
+                                <div class="text-sm text-slate-500 dark:text-gray-500">App Router, SSR, SSG</div>
+                            </div>
+                        </div>
+                        <div class="glass-card p-5 rounded-2xl flex items-center gap-5 group cursor-none">
+                            <div class="w-12 h-12 flex items-center justify-center bg-slate-50 dark:bg-white/5 rounded-xl group-hover:bg-cyan-50 dark:group-hover:bg-cyan-500/20 group-hover:scale-110 transition-all border border-slate-100 dark:border-white/5 group-hover:border-cyan-200 dark:group-hover:border-cyan-500/30">
+                                <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/tailwindcss/tailwindcss-original.svg" class="w-7 h-7" alt="Tailwind">
+                            </div>
+                            <div>
+                                <div class="text-base font-bold text-slate-900 dark:text-gray-200">Tailwind CSS</div>
+                                <div class="text-sm text-slate-500 dark:text-gray-500">Utility-first, Animations</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Languages -->
+                <div class="reveal delay-100">
+                    <div class="flex items-center gap-4 mb-8">
+                        <div class="p-3 rounded-xl bg-yellow-100 dark:bg-yellow-500/10 text-yellow-600 dark:text-yellow-400 border border-yellow-200 dark:border-yellow-500/20 shadow-sm dark:shadow-[0_0_15px_rgba(234,179,8,0.15)]"><i data-lucide="code-2" class="w-6 h-6"></i></div>
+                        <h3 class="font-heading font-bold text-slate-900 dark:text-white text-2xl">Linguagens</h3>
+                    </div>
+                    <div class="space-y-4">
+                        <div class="glass-card p-5 rounded-2xl flex items-center gap-5 group cursor-none">
+                            <div class="w-12 h-12 flex items-center justify-center bg-slate-50 dark:bg-white/5 rounded-xl group-hover:bg-yellow-50 dark:group-hover:bg-yellow-500/20 group-hover:scale-110 transition-all border border-slate-100 dark:border-white/5 group-hover:border-yellow-200 dark:group-hover:border-yellow-500/30">
+                                <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg" class="w-7 h-7 rounded" alt="JS">
+                            </div>
+                            <div>
+                                <div class="text-base font-bold text-slate-900 dark:text-gray-200">JavaScript</div>
+                                <div class="text-sm text-slate-500 dark:text-gray-500">ES6+, Async/Await</div>
+                            </div>
+                        </div>
+                        <div class="glass-card p-5 rounded-2xl flex items-center gap-5 group cursor-none">
+                            <div class="w-12 h-12 flex items-center justify-center bg-slate-50 dark:bg-white/5 rounded-xl group-hover:bg-blue-50 dark:group-hover:bg-blue-600/20 group-hover:scale-110 transition-all border border-slate-100 dark:border-white/5 group-hover:border-blue-200 dark:group-hover:border-blue-600/30">
+                                <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg" class="w-7 h-7 rounded" alt="TS">
+                            </div>
+                            <div>
+                                <div class="text-base font-bold text-slate-900 dark:text-gray-200">TypeScript</div>
+                                <div class="text-sm text-slate-500 dark:text-gray-500">Tipagem Estática, Interfaces</div>
+                            </div>
+                        </div>
+                        <div class="glass-card p-5 rounded-2xl flex items-center gap-5 group cursor-none">
+                            <div class="w-12 h-12 flex items-center justify-center bg-slate-50 dark:bg-white/5 rounded-xl group-hover:bg-orange-50 dark:group-hover:bg-orange-500/20 group-hover:scale-110 transition-all border border-slate-100 dark:border-white/5 group-hover:border-orange-200 dark:group-hover:border-orange-500/30">
+                                <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original.svg" class="w-7 h-7" alt="HTML">
+                            </div>
+                            <div>
+                                <div class="text-base font-bold text-slate-900 dark:text-gray-200">HTML5 / CSS3</div>
+                                <div class="text-sm text-slate-500 dark:text-gray-500">Semântica, Flexbox, Grid</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tools -->
+                <div class="reveal delay-200">
+                    <div class="flex items-center gap-4 mb-8">
+                        <div class="p-3 rounded-xl bg-purple-100 dark:bg-purple-500/10 text-purple-600 dark:text-purple-400 border border-purple-200 dark:border-purple-500/20 shadow-sm dark:shadow-[0_0_15px_rgba(168,85,247,0.15)]"><i data-lucide="wrench" class="w-6 h-6"></i></div>
+                        <h3 class="font-heading font-bold text-slate-900 dark:text-white text-2xl">Ferramentas</h3>
+                    </div>
+                    <div class="space-y-4">
+                        <div class="glass-card p-5 rounded-2xl flex items-center gap-5 group cursor-none">
+                            <div class="w-12 h-12 flex items-center justify-center bg-slate-50 dark:bg-white/5 rounded-xl group-hover:bg-green-50 dark:group-hover:bg-green-500/20 group-hover:scale-110 transition-all border border-slate-100 dark:border-white/5 group-hover:border-green-200 dark:group-hover:border-green-500/30">
+                                <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg" class="w-7 h-7" alt="Node">
+                            </div>
+                            <div>
+                                <div class="text-base font-bold text-slate-900 dark:text-gray-200">Node.js</div>
+                                <div class="text-sm text-slate-500 dark:text-gray-500">APIs, NPM, Ecossistema</div>
+                            </div>
+                        </div>
+                        <div class="glass-card p-5 rounded-2xl flex items-center gap-5 group cursor-none">
+                            <div class="w-12 h-12 flex items-center justify-center bg-slate-50 dark:bg-white/5 rounded-xl group-hover:bg-orange-600/20 group-hover:scale-110 transition-all border border-slate-100 dark:border-white/5 group-hover:border-orange-200 dark:group-hover:border-orange-600/30">
+                                <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/git/git-original.svg" class="w-7 h-7" alt="Git">
+                            </div>
+                            <div>
+                                <div class="text-base font-bold text-slate-900 dark:text-gray-200">Git & GitHub</div>
+                                <div class="text-sm text-slate-500 dark:text-gray-500">Versionamento, CI/CD</div>
+                            </div>
+                        </div>
+                        <div class="glass-card p-5 rounded-2xl flex items-center gap-5 group cursor-none">
+                            <div class="w-12 h-12 flex items-center justify-center bg-slate-50 dark:bg-white/5 rounded-xl group-hover:bg-pink-50 dark:group-hover:bg-pink-500/20 group-hover:scale-110 transition-all border border-slate-100 dark:border-white/5 group-hover:border-pink-200 dark:group-hover:border-pink-500/30">
+                                <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/figma/figma-original.svg" class="w-7 h-7" alt="Figma">
+                            </div>
+                            <div>
+                                <div class="text-base font-bold text-slate-900 dark:text-gray-200">Figma</div>
+                                <div class="text-sm text-slate-500 dark:text-gray-500">Prototipagem, Handover</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Projects Premium Section -->
+    <section id="projects" class="py-32 px-6 border-t border-slate-200 dark:border-white/5 relative">
+        <div class="container mx-auto max-w-7xl">
+            <div class="mb-20 flex flex-col md:flex-row justify-between items-start md:items-end gap-6 reveal">
+                <div class="max-w-2xl">
+                    <span class="text-blue-600 dark:text-blue-400 font-bold uppercase tracking-wider text-sm mb-2 block">Portfólio</span>
+                    <h2 class="text-4xl md:text-5xl font-heading font-bold text-slate-900 dark:text-white mb-4 tracking-tight">Projetos em Destaque</h2>
+                    <p class="text-slate-600 dark:text-gray-400 text-lg leading-relaxed">Uma seleção do meu trabalho recente. Foco em interfaces intuitivas, código limpo e arquitetura de ponta.</p>
+                </div>
+                <a href="https://github.com/riukydev" target="_blank" class="px-6 py-3 rounded-full bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-sm font-bold text-slate-700 dark:text-white hover:bg-slate-200 dark:hover:bg-white/10 transition-colors flex items-center gap-2 group">
+                    Ver todos no GitHub <i data-lucide="arrow-right" class="w-4 h-4 group-hover:translate-x-1 transition-transform"></i>
+                </a>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+                
+                <!-- Project 1: Coffee Aura -->
+                <div class="group glass-card rounded-[2rem] overflow-hidden reveal cursor-none">
+                    <div class="h-64 relative overflow-hidden bg-slate-200 dark:bg-zinc-900">
+                        <img src="https://images.unsplash.com/photo-1497935586351-b67a49e012bf?q=80&w=800&auto=format&fit=crop" alt="Coffee Aura" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110 opacity-90 dark:opacity-70 group-hover:opacity-100">
+                        <div class="absolute inset-0 bg-gradient-to-t from-white via-white/80 dark:from-[#0a0a0c] dark:via-[#0a0a0c]/60 to-transparent"></div>
+                        <div class="absolute top-6 left-6 w-12 h-12 rounded-2xl bg-white/50 dark:bg-white/10 backdrop-blur-md border border-black/5 dark:border-white/20 flex items-center justify-center text-orange-500 dark:text-orange-400 shadow-lg">
+                            <i data-lucide="coffee" class="w-6 h-6"></i>
+                        </div>
+                    </div>
+                    <div class="p-8 pt-0 relative z-10 -mt-6">
+                        <h3 class="text-2xl font-heading font-bold text-slate-900 dark:text-white mb-3 group-hover:text-orange-500 dark:group-hover:text-orange-400 transition-colors">Coffee Aura</h3>
+                        <p class="text-slate-600 dark:text-gray-400 text-sm leading-relaxed mb-6 line-clamp-3">
+                            Landing page premium e imersiva para uma cafeteria artesanal. Foco em semântica, acessibilidade e carregamento ultrarrápido.
+                        </p>
+                        <div class="flex flex-wrap gap-2 mb-8">
+                            <span class="text-[11px] font-bold text-slate-700 dark:text-gray-300 bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 px-3 py-1 rounded-full">HTML5</span>
+                            <span class="text-[11px] font-bold text-slate-700 dark:text-gray-300 bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 px-3 py-1 rounded-full">Tailwind CSS</span>
+                            <span class="text-[11px] font-bold text-slate-700 dark:text-gray-300 bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 px-3 py-1 rounded-full">JS Vanilla</span>
+                        </div>
+                        <div class="flex items-center gap-4 pt-6 border-t border-slate-200 dark:border-white/10">
+                            <a href="https://riukyofc.github.io/Coffe-aura/" target="_blank" class="flex-1 text-center py-2.5 rounded-xl bg-orange-100 dark:bg-orange-500/10 text-orange-600 dark:text-orange-400 font-bold text-sm hover:bg-orange-200 dark:hover:bg-orange-500/20 transition-colors border border-orange-200 dark:border-orange-500/20">
+                                Live Demo
+                            </a>
+                            <a href="https://github.com/riukyofc/Coffe-aura" target="_blank" class="w-12 h-[42px] flex items-center justify-center rounded-xl bg-slate-100 dark:bg-white/5 text-slate-600 dark:text-gray-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200 dark:hover:bg-white/10 transition-colors border border-slate-200 dark:border-white/10">
+                                <i data-lucide="github" class="w-5 h-5"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project 2: Nexar -->
+                <div class="group glass-card rounded-[2rem] overflow-hidden reveal delay-100 cursor-none">
+                    <div class="h-64 relative overflow-hidden bg-slate-200 dark:bg-zinc-900">
+                        <img src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=800&auto=format&fit=crop" alt="Nexar" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110 opacity-90 dark:opacity-70 group-hover:opacity-100">
+                        <div class="absolute inset-0 bg-gradient-to-t from-white via-white/80 dark:from-[#0a0a0c] dark:via-[#0a0a0c]/60 to-transparent"></div>
+                        <div class="absolute top-6 left-6 w-12 h-12 rounded-2xl bg-white/50 dark:bg-white/10 backdrop-blur-md border border-black/5 dark:border-white/20 flex items-center justify-center text-cyan-500 dark:text-cyan-400 shadow-lg">
+                            <i data-lucide="rocket" class="w-6 h-6"></i>
+                        </div>
+                    </div>
+                    <div class="p-8 pt-0 relative z-10 -mt-6">
+                        <h3 class="text-2xl font-heading font-bold text-slate-900 dark:text-white mb-3 group-hover:text-cyan-500 dark:group-hover:text-cyan-400 transition-colors">Nexar</h3>
+                        <p class="text-slate-600 dark:text-gray-400 text-sm leading-relaxed mb-6 line-clamp-3">
+                            Plataforma tecnológica inovadora com design system moderno e foco em micro-interações e experiência do usuário.
+                        </p>
+                        <div class="flex flex-wrap gap-2 mb-8">
+                            <span class="text-[11px] font-bold text-slate-700 dark:text-gray-300 bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 px-3 py-1 rounded-full">React</span>
+                            <span class="text-[11px] font-bold text-slate-700 dark:text-gray-300 bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 px-3 py-1 rounded-full">Tailwind CSS</span>
+                            <span class="text-[11px] font-bold text-slate-700 dark:text-gray-300 bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 px-3 py-1 rounded-full">Framer Motion</span>
+                        </div>
+                        <div class="flex items-center gap-4 pt-6 border-t border-slate-200 dark:border-white/10">
+                            <a href="https://riukydev.github.io/Nexar/" target="_blank" class="flex-1 text-center py-2.5 rounded-xl bg-cyan-100 dark:bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 font-bold text-sm hover:bg-cyan-200 dark:hover:bg-cyan-500/20 transition-colors border border-cyan-200 dark:border-cyan-500/20">
+                                Live Demo
+                            </a>
+                            <a href="https://github.com/riukydev/Nexar" target="_blank" class="w-12 h-[42px] flex items-center justify-center rounded-xl bg-slate-100 dark:bg-white/5 text-slate-600 dark:text-gray-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200 dark:hover:bg-white/10 transition-colors border border-slate-200 dark:border-white/10">
+                                <i data-lucide="github" class="w-5 h-5"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project 3: Lumia -->
+                <div class="group glass-card rounded-[2rem] overflow-hidden reveal delay-200 cursor-none">
+                    <div class="h-64 relative overflow-hidden bg-slate-200 dark:bg-zinc-900">
+                        <img src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=800&auto=format&fit=crop" alt="Lumia" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110 opacity-90 dark:opacity-70 group-hover:opacity-100">
+                        <div class="absolute inset-0 bg-gradient-to-t from-white via-white/80 dark:from-[#0a0a0c] dark:via-[#0a0a0c]/60 to-transparent"></div>
+                        <div class="absolute top-6 left-6 w-12 h-12 rounded-2xl bg-white/50 dark:bg-white/10 backdrop-blur-md border border-black/5 dark:border-white/20 flex items-center justify-center text-indigo-500 dark:text-indigo-400 shadow-lg">
+                            <i data-lucide="layout-template" class="w-6 h-6"></i>
+                        </div>
+                    </div>
+                    <div class="p-8 pt-0 relative z-10 -mt-6">
+                        <h3 class="text-2xl font-heading font-bold text-slate-900 dark:text-white mb-3 group-hover:text-indigo-500 dark:group-hover:text-indigo-400 transition-colors">Lumia Frontend</h3>
+                        <p class="text-slate-600 dark:text-gray-400 text-sm leading-relaxed mb-6 line-clamp-3">
+                            Interface corporativa escalável com padrões B2B, grid layouts complexos e componentes de alta fidelidade visual.
+                        </p>
+                        <div class="flex flex-wrap gap-2 mb-8">
+                            <span class="text-[11px] font-bold text-slate-700 dark:text-gray-300 bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 px-3 py-1 rounded-full">TypeScript</span>
+                            <span class="text-[11px] font-bold text-slate-700 dark:text-gray-300 bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 px-3 py-1 rounded-full">Next.js</span>
+                            <span class="text-[11px] font-bold text-slate-700 dark:text-gray-300 bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 px-3 py-1 rounded-full">Tailwind</span>
+                        </div>
+                        <div class="flex items-center gap-4 pt-6 border-t border-slate-200 dark:border-white/10">
+                            <a href="https://riukydev.github.io/Lumia-Frontend/" target="_blank" class="flex-1 text-center py-2.5 rounded-xl bg-indigo-100 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 font-bold text-sm hover:bg-indigo-200 dark:hover:bg-indigo-500/20 transition-colors border border-indigo-200 dark:border-indigo-500/20">
+                                Live Demo
+                            </a>
+                            <a href="https://github.com/riukydev/Lumia-Frontend" target="_blank" class="w-12 h-[42px] flex items-center justify-center rounded-xl bg-slate-100 dark:bg-white/5 text-slate-600 dark:text-gray-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200 dark:hover:bg-white/10 transition-colors border border-slate-200 dark:border-white/10">
+                                <i data-lucide="github" class="w-5 h-5"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project 4: TechVibe -->
+                <div class="group glass-card rounded-[2rem] overflow-hidden reveal delay-300 cursor-none">
+                    <div class="h-64 relative overflow-hidden bg-slate-200 dark:bg-zinc-900">
+                        <img src="https://images.unsplash.com/photo-1498049794561-7780e7231661?q=80&w=800&auto=format&fit=crop" alt="TechVibe" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110 opacity-90 dark:opacity-70 group-hover:opacity-100">
+                        <div class="absolute inset-0 bg-gradient-to-t from-white via-white/80 dark:from-[#0a0a0c] dark:via-[#0a0a0c]/60 to-transparent"></div>
+                        <div class="absolute top-6 left-6 w-12 h-12 rounded-2xl bg-white/50 dark:bg-white/10 backdrop-blur-md border border-black/5 dark:border-white/20 flex items-center justify-center text-rose-500 dark:text-rose-400 shadow-lg">
+                            <i data-lucide="headphones" class="w-6 h-6"></i>
+                        </div>
+                    </div>
+                    <div class="p-8 pt-0 relative z-10 -mt-6">
+                        <h3 class="text-2xl font-heading font-bold text-slate-900 dark:text-white mb-3 group-hover:text-rose-500 dark:group-hover:text-rose-400 transition-colors">TechVibe</h3>
+                        <p class="text-slate-600 dark:text-gray-400 text-sm leading-relaxed mb-6 line-clamp-3">
+                            E-commerce vibrante com design de alta fidelidade e interações fluidas para produtos tecnológicos premium.
+                        </p>
+                        <div class="flex flex-wrap gap-2 mb-8">
+                            <span class="text-[11px] font-bold text-slate-700 dark:text-gray-300 bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 px-3 py-1 rounded-full">React</span>
+                            <span class="text-[11px] font-bold text-slate-700 dark:text-gray-300 bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 px-3 py-1 rounded-full">Tailwind</span>
+                            <span class="text-[11px] font-bold text-slate-700 dark:text-gray-300 bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 px-3 py-1 rounded-full">Vite</span>
+                        </div>
+                        <div class="flex items-center gap-4 pt-6 border-t border-slate-200 dark:border-white/10">
+                            <a href="https://riukydev.github.io/TechVibe/" target="_blank" class="flex-1 text-center py-2.5 rounded-xl bg-rose-100 dark:bg-rose-500/10 text-rose-600 dark:text-rose-400 font-bold text-sm hover:bg-rose-200 dark:hover:bg-rose-500/20 transition-colors border border-rose-200 dark:border-rose-500/20">
+                                Live Demo
+                            </a>
+                            <a href="https://github.com/riukydev/TechVibe" target="_blank" class="w-12 h-[42px] flex items-center justify-center rounded-xl bg-slate-100 dark:bg-white/5 text-slate-600 dark:text-gray-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200 dark:hover:bg-white/10 transition-colors border border-slate-200 dark:border-white/10">
+                                <i data-lucide="github" class="w-5 h-5"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact -->
+    <section id="contact" class="py-32 px-6 border-t border-slate-200 dark:border-white/5 bg-white dark:bg-[#030305] text-center reveal">
+        <div class="container mx-auto max-w-4xl">
+            <div class="w-20 h-20 bg-blue-100 dark:bg-blue-500/10 border border-blue-200 dark:border-blue-500/20 rounded-3xl flex items-center justify-center text-blue-600 dark:text-blue-400 mx-auto mb-8 shadow-sm dark:shadow-[0_0_30px_rgba(59,130,246,0.15)]">
+                <i data-lucide="mail" class="w-10 h-10"></i>
+            </div>
+            <h2 class="text-4xl md:text-6xl font-heading font-bold text-slate-900 dark:text-white mb-6 tracking-tight">Vamos criar algo épico?</h2>
+            <p class="text-slate-600 dark:text-gray-400 text-lg md:text-xl mb-12 max-w-2xl mx-auto font-light">
+                Atualmente disponível para novas oportunidades. Minha caixa de entrada está aberta.
+            </p>
+            <a href="https://wa.me/5598982715727" target="_blank" class="px-10 py-5 bg-slate-900 dark:bg-white text-white dark:text-black font-bold rounded-full text-lg hover:scale-105 transition-transform inline-flex items-center gap-3 shadow-lg dark:shadow-[0_0_20px_rgba(255,255,255,0.2)] hover:shadow-xl dark:hover:shadow-[0_0_30px_rgba(255,255,255,0.4)]">
+                <i data-lucide="phone" class="w-6 h-6"></i> Falar no WhatsApp
+            </a>
+            
+            <div class="flex justify-center gap-8 mt-20 pt-10 border-t border-slate-200 dark:border-white/5">
+                <a href="https://linkedin.com" target="_blank" class="text-slate-500 dark:text-gray-500 hover:text-blue-600 dark:hover:text-blue-400 transition-colors hover:-translate-y-1 transform"><i data-lucide="linkedin" class="w-6 h-6"></i></a>
+                <a href="https://github.com/riukydev" target="_blank" class="text-slate-500 dark:text-gray-500 hover:text-slate-900 dark:hover:text-white transition-colors hover:-translate-y-1 transform"><i data-lucide="github" class="w-6 h-6"></i></a>
+            </div>
+        </div>
+    </section>
+
+    <footer class="py-10 bg-slate-50 dark:bg-[#030305] text-center text-slate-500 dark:text-gray-600 text-sm font-medium border-t border-slate-200 dark:border-white/5">
+        © 2026 Riuky.dev. Desenvolvido com precisão e <span class="text-blue-600 dark:text-blue-500">foco em UX</span>.
+    </footer>
+
+    <script>
+        lucide.createIcons();
+
+        // --- Logic: 3D Cursor Premium Melhorado ---
+        const cursorContainer = document.getElementById('custom-cursor');
+        const cursorWrapper = cursorContainer.querySelector('.cursor-wrapper');
+        const cursorImage = cursorContainer.querySelector('.cursor-image');
+        
+        let mouseX = 0, mouseY = 0;   
+        let currentX = 0, currentY = 0; 
+        let lastX = 0; 
+        
+        document.body.style.cursor = 'none';
+
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+        });
+
+        document.addEventListener('mousedown', (e) => {
+            document.body.classList.add('cursor-clicking');
+            cursorWrapper.style.transform = 'scale(0.8) translateY(4px)';
+            
+            const ripple = document.createElement('div');
+            ripple.className = 'ripple';
+            ripple.style.left = e.clientX + 'px';
+            ripple.style.top = e.clientY + 'px';
+            document.body.appendChild(ripple);
+            
+            setTimeout(() => ripple.remove(), 600);
+        });
+
+        document.addEventListener('mouseup', () => {
+            document.body.classList.remove('cursor-clicking');
+            cursorWrapper.style.transform = 'scale(1) translateY(0)';
+        });
+
+        function animateCursor() {
+            currentX += (mouseX - currentX) * 0.2;
+            currentY += (mouseY - currentY) * 0.2;
+
+            const deltaX = currentX - lastX;
+            lastX = currentX;
+            const tilt = Math.max(Math.min(deltaX * 1.2, 20), -20);
+
+            cursorContainer.style.transform = `translate(${currentX}px, ${currentY}px)`;
+            
+            if(!document.body.classList.contains('cursor-hover')) {
+                cursorImage.style.transform = `rotate(${tilt}deg)`;
+            }
+            
+            requestAnimationFrame(animateCursor);
+        }
+        
+        if (window.matchMedia("(hover: hover)").matches) {
+            currentX = mouseX = window.innerWidth / 2;
+            currentY = mouseY = window.innerHeight / 2;
+            animateCursor();
+        } else {
+            document.body.style.cursor = 'auto';
+        }
+
+        const interactables = document.querySelectorAll('a, button, .glass-card, .cursor-none');
+        interactables.forEach(el => {
+            el.addEventListener('mouseenter', () => document.body.classList.add('cursor-hover'));
+            el.addEventListener('mouseleave', () => document.body.classList.remove('cursor-hover'));
+        });
+
+        function applyTheme(isDark) {
+            const icon = document.getElementById('theme-icon');
+            if (isDark) {
+                document.documentElement.classList.add('dark');
+                icon.setAttribute('data-lucide', 'sun');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+                icon.setAttribute('data-lucide', 'moon');
+                localStorage.setItem('theme', 'light');
+            }
+            lucide.createIcons();
+        }
+
+        function toggleTheme() {
+            const isDark = document.documentElement.classList.contains('dark');
+            applyTheme(!isDark);
+        }
+
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'light') { applyTheme(false); } 
+        else { applyTheme(true); }
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => { 
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                } 
+            });
+        }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+        
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+        const menu = document.getElementById('mobile-menu');
+        function toggleMenu() {
+            if (menu.classList.contains('hidden')) {
+                menu.classList.remove('hidden');
+                setTimeout(() => menu.classList.remove('opacity-0'), 10);
+                document.body.style.overflow = 'hidden';
+            } else {
+                menu.classList.add('opacity-0');
+                setTimeout(() => {
+                    menu.classList.add('hidden');
+                    document.body.style.overflow = 'auto';
+                }, 300);
+            }
+        }
+    </script>
+</body>
+</html>
